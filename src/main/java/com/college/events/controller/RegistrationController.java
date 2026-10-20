@@ -1,6 +1,7 @@
 package com.college.events.controller;
 
 import com.college.events.model.Event;
+import com.college.events.model.Registration;
 import com.college.events.model.User;
 import com.college.events.service.EventService;
 import com.college.events.service.RegistrationService;
@@ -92,6 +93,25 @@ public class RegistrationController {
         User user = getLoggedInUser(authentication);
         model.addAttribute("registrations", registrationService.getUserRegistrations(user));
         return "registrations/my-registrations";
+    }
+
+    /**
+     * Show dedicated printable Event Entry Pass.
+     */
+    @GetMapping("/pass/{regId}")
+    public String viewPass(@PathVariable Long regId, Authentication authentication, Model model) {
+        User user = getLoggedInUser(authentication);
+        Optional<Registration> optReg = registrationService.getRegistrationById(regId);
+        if (optReg.isEmpty()) {
+            return "redirect:/registrations/my";
+        }
+        Registration reg = optReg.get();
+        // Ensure user can only view their own pass (or admin)
+        if (!reg.getUser().getId().equals(user.getId()) && user.getRole() != com.college.events.model.Role.ADMIN) {
+            return "redirect:/registrations/my";
+        }
+        model.addAttribute("registration", reg);
+        return "registrations/pass";
     }
 
     private User getLoggedInUser(Authentication authentication) {

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Event Pass</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: layout('Event Entry Pass', ~{::content})}">
+        <div th:fragment="content">
+
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                <a th:href="@{/registrations/my}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Back to My Registrations
+                </a>
+                <button type="button" class="btn btn-primary" onclick="window.print()">
+                    <i class="bi bi-printer me-1"></i> Print / Save Pass
+                </button>
+            </div>
+
+            <!-- Pass Card -->
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-7">
+                    <div class="card border-0 shadow-lg overflow-hidden">
+                        <!-- Top Header Banner -->
+                        <div class="bg-primary text-white p-4 text-center position-relative">
+                            <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-3 px-3 py-2">
+                                <i class="bi bi-check-circle-fill me-1"></i> CONFIRMED
+                            </span>
+                            <div class="small text-uppercase tracking-wide opacity-75">College Event Pass</div>
+                            <h2 class="fw-bold mt-1 mb-0" th:text="${registration.event.name}">Event Name</h2>
+                            <p class="mb-0 text-white-50 mt-1" th:text="${registration.event.location}">Campus Auditorium</p>
+                        </div>
+
+                        <!-- Ticket Body -->
+                        <div class="card-body p-4 bg-white">
+                            <!-- Registration Code Banner -->
+                            <div class="bg-light border rounded-3 p-3 text-center mb-4">
+                                <div class="text-muted small text-uppercase">Official Pass Verification Code</div>
+                                <div class="fs-3 fw-bold text-primary font-monospace tracking-widest"
+                                     th:text="'EVT-' + ${registration.event.id} + '-REG' + ${registration.id}">
+                                    EVT-1-REG101
+                                </div>
+                                <div class="text-muted small">Show this code or printed copy at the entrance desk</div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <div class="text-muted small">Attendee Name</div>
+                                    <div class="fw-semibold fs-5" th:text="${registration.user.fullName}">Student Name</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="text-muted small">Registered Email</div>
+                                    <div class="fw-semibold text-break" th:text="${registration.user.email}">student@college.com</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="text-muted small">Event Date</div>
+                                    <div class="fw-semibold">
+                                        <i class="bi bi-calendar-check text-primary me-1"></i>
+                                        <span th:text="${registration.event.date}">2026-10-30</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="text-muted small">Event Timing</div>
+                                    <div class="fw-semibold">
+                                        <i class="bi bi-clock text-primary me-1"></i>
+                                        <span th:text="${registration.event.startTime}">10:00</span> - 
+                                        <span th:text="${registration.event.endTime}">12:00</span>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-muted small">Venue / Hall</div>
+                                    <div class="fw-semibold">
+                                        <i class="bi bi-geo-alt text-danger me-1"></i>
+                                        <span th:text="${registration.event.location}">Main Hall</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <!-- Pass Footer Details -->
+                            <div class="d-flex justify-content-between align-items-center text-muted small">
+                                <div>
+                                    <span>Pass ID: </span><strong th:text="'#' + ${registration.id}">#1</strong>
+                                </div>
+                                <div>
+                                    <span>Issued On: </span>
+                                    <span th:text="${#temporals.format(registration.registeredAt, 'dd MMM yyyy, hh:mm a')}">Date</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ticket Perforated Bottom Bar -->
+                        <div class="card-footer bg-light border-top text-center py-3 text-muted small">
+                            <i class="bi bi-shield-check text-success me-1"></i>
+                            Verified Campus Pass &bull; Non-transferable &bull; Valid with College ID
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

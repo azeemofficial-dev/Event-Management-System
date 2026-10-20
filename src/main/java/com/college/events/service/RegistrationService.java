@@ -79,6 +79,10 @@ public class RegistrationService {
         });
     }
 
+    public Optional<Registration> getRegistrationById(Long id) {
+        return registrationRepository.findById(id);
+    }
+
     public List<Registration> getUserRegistrations(User user) {
         return registrationRepository.findByUser(user);
     }

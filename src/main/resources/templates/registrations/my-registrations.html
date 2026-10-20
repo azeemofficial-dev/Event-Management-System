@@ -53,56 +53,15 @@
                             <a th:href="@{/events/{id}(id=${reg.event.id})}" class="btn btn-outline-primary flex-fill">
                                 <i class="bi bi-eye me-1"></i> View Event
                             </a>
-                            <button type="button" class="btn btn-primary flex-fill"
-                                    data-bs-toggle="modal" th:data-bs-target="'#passModal' + ${reg.id}">
-                                <i class="bi bi-qr-code me-1"></i> View Pass
-                            </button>
+                            <a th:href="@{/registrations/pass/{id}(id=${reg.id})}" class="btn btn-primary flex-fill">
+                                <i class="bi bi-ticket-perforated me-1"></i> View Pass
+                            </a>
                             <form th:action="@{/registrations/cancel/{id}(id=${reg.event.id})}" method="post" class="flex-fill">
                                 <button type="submit" class="btn btn-outline-danger w-100"
                                         onclick="return confirm('Cancel this registration?')">
                                     <i class="bi bi-x-circle me-1"></i> Cancel
                                 </button>
                             </form>
-                        </div>
-
-                        <!-- Ticket / Pass Modal -->
-                        <div class="modal fade" th:id="'passModal' + ${reg.id}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content border-0 shadow">
-                                    <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title">
-                                            <i class="bi bi-ticket-perforated me-2"></i>Event Entry Pass
-                                        </h5>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body p-4 text-center">
-                                        <div class="badge bg-success mb-2 px-3 py-2 fs-6">CONFIRMED PASS</div>
-                                        <h4 class="fw-bold mt-2 text-dark" th:text="${reg.event.name}">Event Title</h4>
-                                        <hr>
-                                        <div class="text-start bg-light p-3 rounded-3 mb-3">
-                                            <div class="mb-2"><strong>Attendee:</strong> <span th:text="${reg.user.fullName}">Name</span></div>
-                                            <div class="mb-2"><strong>Email:</strong> <span th:text="${reg.user.email}">Email</span></div>
-                                            <div class="mb-2"><strong>Pass / Reg ID:</strong> #<span th:text="${reg.id}">123</span></div>
-                                            <div class="mb-2"><strong>Venue:</strong> <span th:text="${reg.event.location}">Venue</span></div>
-                                            <div class="mb-2"><strong>Date & Time:</strong>
-                                                <span th:text="${reg.event.date}">Date</span> (<span th:text="${reg.event.startTime}">Start</span> - <span th:text="${reg.event.endTime}">End</span>)
-                                            </div>
-                                            <div><strong>Issued:</strong> <span th:text="${#temporals.format(reg.registeredAt, 'dd MMM yyyy, hh:mm a')}">Date</span></div>
-                                        </div>
-                                        <!-- Simulated Barcode / QR Box -->
-                                        <div class="p-3 border border-2 border-dashed rounded bg-white d-inline-block">
-                                            <i class="bi bi-qr-code text-dark" style="font-size: 5rem;"></i>
-                                            <div class="small text-muted mt-1">SCAN AT ENTRANCE</div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer bg-light">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-outline-primary" onclick="window.print()">
-                                            <i class="bi bi-printer me-1"></i> Print Pass
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
