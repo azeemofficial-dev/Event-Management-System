@@ -7,10 +7,8 @@ import com.college.events.service.EventService;
 import com.college.events.service.RegistrationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,5 +69,14 @@ public class AdminDashboardController {
         model.addAttribute("event", event);
         model.addAttribute("registrations", registrations);
         return "admin/attendees";
+    }
+
+    @PostMapping("/events/{eventId}/attendees/{regId}/delete")
+    public String removeAttendee(@PathVariable Long eventId,
+                                 @PathVariable Long regId,
+                                 RedirectAttributes redirectAttributes) {
+        registrationService.cancelRegistrationById(regId);
+        redirectAttributes.addFlashAttribute("success", "Attendee removed successfully.");
+        return "redirect:/admin/events/" + eventId + "/attendees";
     }
 }

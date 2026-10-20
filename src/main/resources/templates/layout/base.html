@@ -33,22 +33,22 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/events}">
-                            <i class="bi bi-list-ul me-1"></i>Events
+                            <i class="bi bi-calendar3 me-1"></i>All Events
                         </a>
                     </li>
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <li class="nav-item" sec:authorize="hasRole('ATTENDEE')">
                         <a class="nav-link" th:href="@{/registrations/my}">
                             <i class="bi bi-bookmark-check me-1"></i>My Registrations
                         </a>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                        <a class="nav-link" th:href="@{/admin/dashboard}">
-                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        <a class="nav-link text-warning" th:href="@{/admin/dashboard}">
+                            <i class="bi bi-speedometer2 me-1"></i>Admin Dashboard
                         </a>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                         <a class="nav-link" th:href="@{/admin/events/new}">
-                            <i class="bi bi-plus-circle me-1"></i>New Event
+                            <i class="bi bi-plus-circle me-1"></i>Create Event
                         </a>
                     </li>
                 </ul>
@@ -64,9 +64,11 @@
                         </a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <span class="nav-link text-light">
+                        <span class="nav-link text-light d-flex align-items-center">
                             <i class="bi bi-person-circle me-1"></i>
-                            <span sec:authentication="name">User</span>
+                            <span sec:authentication="name" class="me-2">User</span>
+                            <span sec:authorize="hasRole('ADMIN')" class="badge bg-danger">ADMIN</span>
+                            <span sec:authorize="hasRole('ATTENDEE')" class="badge bg-primary">STUDENT</span>
                         </span>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">

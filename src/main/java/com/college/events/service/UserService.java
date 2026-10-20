@@ -22,7 +22,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(String fullName, String email, String rawPassword) {
+    public User registerUser(String fullName, String email, String rawPassword, Role role) {
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email already registered: " + email);
         }
@@ -31,7 +31,7 @@ public class UserService {
         user.setFullName(fullName);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setRole(Role.ATTENDEE);
+        user.setRole(role != null ? role : Role.ATTENDEE);
         return userRepository.save(user);
     }
 

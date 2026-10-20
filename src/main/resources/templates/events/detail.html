@@ -83,8 +83,24 @@
                                         </a>
                                     </div>
 
-                                    <!-- Logged in and already registered -->
-                                    <div sec:authorize="isAuthenticated()" th:if="${isRegistered}">
+                                    <!-- Logged in as Admin -->
+                                    <div sec:authorize="hasRole('ADMIN')">
+                                        <div class="alert alert-secondary py-2 mb-2">
+                                            <i class="bi bi-shield-check text-danger me-1"></i>
+                                            Logged in as <strong>Admin</strong>
+                                        </div>
+                                        <div class="d-grid gap-2">
+                                            <a th:href="@{/admin/events/{id}/attendees(id=${event.id})}" class="btn btn-outline-primary">
+                                                <i class="bi bi-people me-1"></i> View Attendees
+                                            </a>
+                                            <a th:href="@{/admin/events/edit/{id}(id=${event.id})}" class="btn btn-outline-warning">
+                                                <i class="bi bi-pencil me-1"></i> Edit Event
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Logged in as Attendee and already registered -->
+                                    <div sec:authorize="hasRole('ATTENDEE')" th:if="${isRegistered}">
                                         <p class="text-success">
                                             <i class="bi bi-check-circle-fill me-1"></i> You are registered!
                                         </p>
@@ -96,8 +112,8 @@
                                         </form>
                                     </div>
 
-                                    <!-- Logged in and not registered -->
-                                    <div sec:authorize="isAuthenticated()" th:if="${!isRegistered}">
+                                    <!-- Logged in as Attendee and not registered -->
+                                    <div sec:authorize="hasRole('ATTENDEE')" th:if="${!isRegistered}">
                                         <form th:if="${!event.full}"
                                               th:action="@{/registrations/register/{id}(id=${event.id})}"
                                               method="post">

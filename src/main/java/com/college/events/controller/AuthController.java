@@ -51,7 +51,7 @@ public class AuthController {
             return "auth/register";
         }
 
-        userService.registerUser(user.getFullName(), user.getEmail(), user.getPassword());
+        userService.registerUser(user.getFullName(), user.getEmail(), user.getPassword(), user.getRole());
         redirectAttributes.addFlashAttribute("success", "Registration successful! Please login.");
         return "redirect:/auth/login";
     }

@@ -66,6 +66,19 @@ public class RegistrationService {
         eventRepository.save(event);
     }
 
+    /**
+     * Cancel/delete a registration by registration ID (used by admin).
+     */
+    @Transactional
+    public void cancelRegistrationById(Long registrationId) {
+        registrationRepository.findById(registrationId).ifPresent(reg -> {
+            Event event = reg.getEvent();
+            registrationRepository.delete(reg);
+            event.setRegisteredCount(Math.max(0, event.getRegisteredCount() - 1));
+            eventRepository.save(event);
+        });
+    }
+
     public List<Registration> getUserRegistrations(User user) {
         return registrationRepository.findByUser(user);
     }
