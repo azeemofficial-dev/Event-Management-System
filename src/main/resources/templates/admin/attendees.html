@@ -19,14 +19,19 @@
             </div>
 
             <div class="card shadow-sm">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <h4 class="mb-0">
                         <i class="bi bi-people text-primary me-2"></i>
                         Attendees for: <span th:text="${event.name}">Event Name</span>
                     </h4>
-                    <span class="badge bg-primary rounded-pill" th:text="${#lists.size(registrations)} + ' attendees'">
-                        0 attendees
-                    </span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-primary rounded-pill" th:text="${#lists.size(registrations)} + ' attendees'">
+                            0 attendees
+                        </span>
+                        <a th:href="@{/admin/events/{id}/attendees/export(id=${event.id})}" class="btn btn-sm btn-success">
+                            <i class="bi bi-file-earmark-arrow-down me-1"></i> Export CSV
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <!-- Search/Filter -->

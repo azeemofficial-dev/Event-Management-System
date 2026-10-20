@@ -79,4 +79,32 @@ public class AdminDashboardController {
         redirectAttributes.addFlashAttribute("success", "Attendee removed successfully.");
         return "redirect:/admin/events/" + eventId + "/attendees";
     }
+
+    @GetMapping("/events/{eventId}/attendees/export")
+    public org.springframework.http.ResponseEntity<byte[]> exportAttendeesCsv(@PathVariable Long eventId) {
+        Optional<Event> optEvent = eventService.getEventById(eventId);
+        if (optEvent.isEmpty()) {
+            return org.springframework.http.ResponseEntity.notFound().build();
+        }
+
+        Event event = optEvent.get();
+        List<Registration> registrations = registrationService.getEventRegistrations(event);
+
+        StringBuilder csv = new StringBuilder();
+        csv.append("Registration ID,Attendee Name,Email,Registration Date\n");
+        for (Registration reg : registrations) {
+            csv.append(reg.getId()).append(",")
+               .append("\"").append(reg.getUser().getFullName().replace("\"", "\"\"")).append("\",")
+               .append("\"").append(reg.getUser().getEmail().replace("\"", "\"\"")).append("\",")
+               .append(reg.getRegisteredAt()).append("\n");
+        }
+
+        String filename = "attendees-event-" + eventId + ".csv";
+        byte[] bytes = csv.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+
+        return org.springframework.http.ResponseEntity.ok()
+                .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .header(org.springframework.http.HttpHeaders.CONTENT_TYPE, "text/csv; charset=UTF-8")
+                .body(bytes);
+    }
 }
