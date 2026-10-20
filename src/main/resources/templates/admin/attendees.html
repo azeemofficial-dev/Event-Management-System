@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Attendee List</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: layout('Attendees',  ~{::content})}">
+        <div th:fragment="content">
+
+            <!-- Back link -->
+            <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary mb-3">
+                <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+            </a>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="bi bi-people text-primary me-2"></i>
+                        Attendees for: <span th:text="${event.name}">Event Name</span>
+                    </h4>
+                    <span class="badge bg-primary rounded-pill" th:text="${#lists.size(registrations)} + ' attendees'">
+                        0 attendees
+                    </span>
+                </div>
+                <div class="card-body">
+                    <!-- Search/Filter -->
+                    <form th:action="@{/admin/events/{id}/attendees(id=${event.id})}" method="get" class="mb-3">
+                        <div class="input-group" style="max-width: 400px;">
+                            <input type="text" class="form-control" name="search"
+                                   th:value="${search}" placeholder="Search by name or email...">
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div th:if="${#lists.isEmpty(registrations)}" class="text-center py-4 text-muted">
+                        <i class="bi bi-people" style="font-size: 2rem;"></i>
+                        <p class="mt-2">No attendees found.</p>
+                    </div>
+
+                    <div class="table-responsive" th:unless="${#lists.isEmpty(registrations)}">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Registered At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="reg, iter : ${registrations}">
+                                    <td th:text="${iter.count}">1</td>
+                                    <td th:text="${reg.user.fullName}">Name</td>
+                                    <td th:text="${reg.user.email}">email@example.com</td>
+                                    <td th:text="${#temporals.format(reg.registeredAt, 'dd MMM yyyy, hh:mm a')}">Date</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

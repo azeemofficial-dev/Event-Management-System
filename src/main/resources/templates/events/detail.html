@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Event Details</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: layout('Event Details',  ~{::content})}">
+        <div th:fragment="content">
+
+            <!-- Back link -->
+            <a th:href="@{/events}" class="btn btn-outline-secondary mb-3">
+                <i class="bi bi-arrow-left me-1"></i> Back to Events
+            </a>
+
+            <!-- Success/Error messages -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+                <i class="bi bi-check-circle me-1"></i> <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+                <i class="bi bi-exclamation-circle me-1"></i> <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h1 class="mb-3" th:text="${event.name}">Event Name</h1>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p class="lead" th:text="${event.description}">Event description.</p>
+
+                            <hr>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-6 mb-2">
+                                    <i class="bi bi-calendar3 text-primary me-2"></i>
+                                    <strong>Date:</strong>
+                                    <span th:text="${event.date}">Date</span>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <i class="bi bi-clock text-primary me-2"></i>
+                                    <strong>Time:</strong>
+                                    <span th:text="${event.startTime}">Start</span> –
+                                    <span th:text="${event.endTime}">End</span>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <i class="bi bi-geo-alt text-primary me-2"></i>
+                                    <strong>Location:</strong>
+                                    <span th:text="${event.location}">Location</span>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <i class="bi bi-people text-primary me-2"></i>
+                                    <strong>Capacity:</strong>
+                                    <span th:text="${event.registeredCount}">0</span> /
+                                    <span th:text="${event.capacity}">0</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="badge bg-success fs-6" th:if="${!event.full}">
+                                    <span th:text="${event.capacity - event.registeredCount}">0</span> spots available
+                                </span>
+                                <span class="badge bg-danger fs-6" th:if="${event.full}">Event Full</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Registration</h5>
+
+                                    <!-- ════════════════════════════════════════════════ -->
+                                    <!-- REGISTER / CANCEL BUTTON — Bhumika's section    -->
+                                    <!-- ════════════════════════════════════════════════ -->
+
+                                    <!-- Not logged in -->
+                                    <div sec:authorize="!isAuthenticated()">
+                                        <p class="text-muted">Please login to register.</p>
+                                        <a th:href="@{/auth/login}" class="btn btn-primary w-100">
+                                            <i class="bi bi-box-arrow-in-right me-1"></i> Login to Register
+                                        </a>
+                                    </div>
+
+                                    <!-- Logged in and already registered -->
+                                    <div sec:authorize="isAuthenticated()" th:if="${isRegistered}">
+                                        <p class="text-success">
+                                            <i class="bi bi-check-circle-fill me-1"></i> You are registered!
+                                        </p>
+                                        <form th:action="@{/registrations/cancel/{id}(id=${event.id})}" method="post">
+                                            <button type="submit" class="btn btn-outline-danger w-100"
+                                                    onclick="return confirm('Cancel your registration?')">
+                                                <i class="bi bi-x-circle me-1"></i> Cancel Registration
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Logged in and not registered -->
+                                    <div sec:authorize="isAuthenticated()" th:if="${!isRegistered}">
+                                        <form th:if="${!event.full}"
+                                              th:action="@{/registrations/register/{id}(id=${event.id})}"
+                                              method="post">
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                <i class="bi bi-check-lg me-1"></i> Register Now
+                                            </button>
+                                        </form>
+                                        <p th:if="${event.full}" class="text-danger">
+                                            <i class="bi bi-exclamation-circle me-1"></i> This event is full.
+                                        </p>
+                                    </div>
+
+                                    <!-- ════════════════════════════════════════════════ -->
+                                    <!-- END Bhumika's section                            -->
+                                    <!-- ════════════════════════════════════════════════ -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

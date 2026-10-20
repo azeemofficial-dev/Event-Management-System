@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: layout('Admin Dashboard',  ~{::content})}">
+        <div th:fragment="content">
+
+            <h2 class="mb-4">
+                <i class="bi bi-speedometer2 text-primary me-2"></i>Admin Dashboard
+            </h2>
+
+            <!-- Stat Cards -->
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3">
+                    <div class="card stat-card primary shadow-sm">
+                        <div class="card-body">
+                            <h6 class="text-muted">Total Events</h6>
+                            <div class="stat-number text-primary" th:text="${totalEvents}">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card stat-card success shadow-sm">
+                        <div class="card-body">
+                            <h6 class="text-muted">Total Registrations</h6>
+                            <div class="stat-number text-success" th:text="${totalRegistrations}">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card stat-card warning shadow-sm">
+                        <div class="card-body">
+                            <h6 class="text-muted">Active Events</h6>
+                            <div class="stat-number text-warning" th:text="${#lists.size(events)}">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registrations per Event Table -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-bar-chart me-2"></i>Registrations per Event
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Event Name</th>
+                                    <th class="text-center">Registrations</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="entry : ${registrationsPerEvent}">
+                                    <td th:text="${entry.key}">Event Name</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-primary rounded-pill" th:text="${entry.value}">0</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <a th:each="event : ${events}" th:if="${event.name == entry.key}"
+                                           th:href="@{/admin/events/{id}/attendees(id=${event.id})}"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-people me-1"></i> View Attendees
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="d-flex gap-2">
+                <a th:href="@{/admin/events/new}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-1"></i> Create Event
+                </a>
+                <a th:href="@{/admin/events}" class="btn btn-outline-secondary">
+                    <i class="bi bi-list-ul me-1"></i> Manage Events
+                </a>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

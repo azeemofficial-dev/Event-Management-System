@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: layout('Register',  ~{::content})}">
+        <div th:fragment="content">
+
+            <div class="auth-container">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">
+                            <i class="bi bi-person-plus text-primary"></i> Create Account
+                        </h2>
+
+                        <form th:action="@{/auth/register}" th:object="${user}" method="post">
+                            <div class="mb-3">
+                                <label for="fullName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullName"
+                                       th:field="*{fullName}" placeholder="Your full name" required>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('fullName')}"
+                                     th:errors="*{fullName}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email"
+                                       th:field="*{email}" placeholder="you@college.com" required>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('email')}"
+                                     th:errors="*{email}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password"
+                                       th:field="*{password}" placeholder="Min. 6 characters" required>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('password')}"
+                                     th:errors="*{password}"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-person-plus me-1"></i> Register
+                            </button>
+                        </form>
+
+                        <p class="text-center mt-3 mb-0">
+                            Already have an account?
+                            <a th:href="@{/auth/login}">Login here</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: layout('Login',  ~{::content})}">
+        <div th:fragment="content">
+
+            <div class="auth-container">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">
+                            <i class="bi bi-box-arrow-in-right text-primary"></i> Login
+                        </h2>
+
+                        <!-- Success message (e.g. after registration) -->
+                        <div th:if="${param.logout}" class="alert alert-info">
+                            <i class="bi bi-check-circle me-1"></i> You have been logged out.
+                        </div>
+                        <div th:if="${success}" class="alert alert-success">
+                            <i class="bi bi-check-circle me-1"></i> <span th:text="${success}"></span>
+                        </div>
+                        <div th:if="${param.error}" class="alert alert-danger">
+                            <i class="bi bi-exclamation-circle me-1"></i> Invalid email or password.
+                        </div>
+
+                        <form th:action="@{/auth/login}" method="post">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="username" name="username"
+                                       placeholder="you@college.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password"
+                                       placeholder="••••••" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                            </button>
+                        </form>
+
+                        <p class="text-center mt-3 mb-0">
+                            Don't have an account?
+                            <a th:href="@{/auth/register}">Register here</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
