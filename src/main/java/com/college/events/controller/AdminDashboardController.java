@@ -2,7 +2,8 @@ package com.college.events.controller;
 
 import com.college.events.model.Event;
 import com.college.events.model.Registration;
-import com.college.events.service.DashboardService;
+import com.college.events.repository.EventRepository;
+import com.college.events.repository.RegistrationRepository;
 import com.college.events.service.EventService;
 import com.college.events.service.RegistrationService;
 import org.springframework.stereotype.Controller;
@@ -10,37 +11,46 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Admin dashboard with stats and attendee lists.
- *
- * @author Jiya
+ * Admin dashboard and attendee management.
  */
 @Controller
 @RequestMapping("/admin")
 public class AdminDashboardController {
 
-    private final DashboardService dashboardService;
+    private final EventRepository eventRepository;
+    private final RegistrationRepository registrationRepository;
     private final EventService eventService;
     private final RegistrationService registrationService;
 
-    public AdminDashboardController(DashboardService dashboardService,
+    public AdminDashboardController(EventRepository eventRepository,
+                                    RegistrationRepository registrationRepository,
                                     EventService eventService,
                                     RegistrationService registrationService) {
-        this.dashboardService = dashboardService;
+        this.eventRepository = eventRepository;
+        this.registrationRepository = registrationRepository;
         this.eventService = eventService;
         this.registrationService = registrationService;
     }
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        model.addAttribute("totalEvents", dashboardService.getTotalEvents());
-        model.addAttribute("totalRegistrations", dashboardService.getTotalRegistrations());
-        model.addAttribute("registrationsPerEvent", dashboardService.getRegistrationsPerEvent());
-        model.addAttribute("events", eventService.getAllEvents());
+        List<Event> events = eventRepository.findAll();
+        Map<String, Long> perEventStats = new LinkedHashMap<>();
+        for (Event event : events) {
+            perEventStats.put(event.getName(), registrationRepository.countByEvent(event));
+        }
+
+        model.addAttribute("totalEvents", eventRepository.count());
+        model.addAttribute("totalRegistrations", registrationRepository.count());
+        model.addAttribute("registrationsPerEvent", perEventStats);
+        model.addAttribute("events", events);
         return "admin/dashboard";
     }
 
